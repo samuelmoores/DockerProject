@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  client:
+    image: nginx:stable
+    ports:
+      - "80:80"
+    volumes:
+      - ./dist:/usr/share/nginx/html:ro
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - ./:/app:cached
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python server.py
+    restart: unless-stopped
+
+# Notes:
+# - `client` serves pre-built static files from ./dist. For production, run your build
+#   step (e.g. `npm run build`) so `./dist` exists.
+# - `api` builds using the repository Dockerfile and runs `server.py` from the mounted
+#   project directory (so changes in dev are visible). If your Dockerfile already
+#   provides the entrypoint, you can remove `command:`.
+# - To use env files, add `env_file: - .env` under a service.
