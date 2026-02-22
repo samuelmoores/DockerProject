@@ -6,7 +6,5 @@ services:
 
   client:
     build: ./client       # looks for Dockerfile inside the client folder
-    ports:
-      - "8080:8080"
     depends_on:
       - server
