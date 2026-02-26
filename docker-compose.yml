@@ -1,10 +1,19 @@
 services:
+  # Define the server container
   server:
     build: ./server       # looks for Dockerfile inside the server folder
     ports:
+      # Map port 65432 on the host machine to port 65432 inside the container
+      # Format is "host_port:container_port"
+      # This lets you connect to the server from outside Docker if needed
       - "65432:65432"
 
+  # Define the client container
   client:
     build: ./client       # looks for Dockerfile inside the client folder
     depends_on:
+      # Ensures Docker starts the server container before the client container.
+      # Note: this only waits for the server *container* to start, not for the
+      # server *application* to be ready — which is why the client script has
+      # its own retry loop to handle that gap.
       - server
