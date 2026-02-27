@@ -25,7 +25,7 @@ if s is None:
     exit(1)
 
 # Send a message to the server (must be bytes, not a string)
-s.send(b'Hi!')
+s.send(b'hi!') # NOTICE lowercase
 
 # Wait to receive the server's response (up to 1024 bytes)
 data = s.recv(1024)
